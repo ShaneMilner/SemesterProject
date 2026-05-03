@@ -110,7 +110,7 @@ Run the main program:
 
 ```bash
 
-python src/Milner_CS3080_SemesterProject.py
+python SemesterProject/src/Milner_CS3080_SemesterProject.py
 
 ```
 
