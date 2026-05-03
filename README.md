@@ -110,7 +110,7 @@ Run the main program:
 
 ```bash
 
-python SemesterProject/src/Milner_CS3080_SemesterProject.py
+python src/Milner_CS3080_SemesterProject.py
 
 ```
 
@@ -138,13 +138,13 @@ Then:
 
 ```
 
-ImageFilterApp/
+SemesterProject/
 
 │
 
 ├── src/
 
-│   └── image\_filter\_app.py
+│   └── Milner_CS3080_SemesterProject.py
 
 │
 
@@ -208,7 +208,7 @@ ImageFilterApp/
 
 \* Improve UI layout and responsiveness
 
-\* Add save/export functionality
+\* Improve export options (additional formats, compression settings)
 
 
 
