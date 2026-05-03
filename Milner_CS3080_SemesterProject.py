@@ -17,6 +17,8 @@ from PIL import Image, ImageTk, ImageFilter, ImageOps
 import cv2
 import numpy as np
 
+# OS used to open the correct filepath when searching for images.
+import os
 
 
 # BaseFilter is the parent class for all image filters.
@@ -214,7 +216,18 @@ class ImageFilterApp:
 
     # Opens an image file from the user's computer.
     def open_image(self):
+        # Get the directory where the Python script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Set the default folder to the images subdirectory
+        images_dir = os.path.join(script_dir, "images")
+
+        # If the images folder doesn't exist, create it
+        if not os.path.exists(images_dir):
+            os.makedirs(images_dir)
+
         file_path = filedialog.askopenfilename(
+            initialdir=images_dir,  # Open file dialog in images folder
             filetypes=[
                 ("Image Files", "*.jpg *.jpeg *.png *.bmp *.gif")
             ]
