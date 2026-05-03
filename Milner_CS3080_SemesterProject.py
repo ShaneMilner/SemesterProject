@@ -141,6 +141,10 @@ class ImageFilterApp:
     def __init__(self, root):
         # Store the main tkinter window.
         self.root = root
+        
+        # Stores a history of all filters used so that, when saved, the filters are 
+        # all applied to the newly created image instead of editing the original.
+        self.filter_history = []
 
         # Set window title, size, and allow resizing.
         self.root.title("Image Filter App")
@@ -217,18 +221,20 @@ class ImageFilterApp:
         )
 
         if file_path:
-            image = Image.open(file_path).convert("RGB")
+            full_image = Image.open(file_path).convert("RGB")
 
-            # Limit image resolution so large images do not slow down the app.
-            max_width = 1200
-            max_height = 1200
+            # Keep full-resolution original for saving later
+            self.original_image = full_image.copy()
 
-            # thumbnail keeps the same aspect ratio while shrinking large images.
-            if image.width > max_width or image.height > max_height:
-                image.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
+            # Create a smaller working version for performance
+            max_work_size = 900  # adjust for speed vs quality
 
-            self.original_image = image.copy()
-            self.current_image = image.copy()
+            work_image = full_image.copy()
+            work_image.thumbnail((max_work_size, max_work_size), Image.Resampling.LANCZOS)
+
+            self.current_image = work_image
+
+            # Display uses resized version anyway, so user won’t notice
             self.show_image(self.current_image)
 
 
@@ -278,8 +284,11 @@ class ImageFilterApp:
 
         selected_filter = self.filters[filter_name]
 
-        # Polymorphism: each filter has its own apply method.
+        # Apply filter to current image (for display)
         self.current_image = selected_filter.apply(self.current_image)
+
+        # Save filter to history
+        self.filter_history.append(filter_name)
 
         self.show_image(self.current_image)
 
@@ -291,28 +300,41 @@ class ImageFilterApp:
             return
 
         self.current_image = self.original_image.copy()
+        self.filter_history = []  # clear history
         self.show_image(self.current_image)
 
 
     # Saves the edited image to the user's computer.
     def save_image(self):
-        if self.current_image is None:
+        if self.original_image is None:
             messagebox.showwarning("No Image", "There is no image to save.")
             return
 
         file_path = filedialog.asksaveasfilename(
-            defaultextension=".png",
+            defaultextension=".jpg",
             filetypes=[
-                ("PNG Files", "*.png"),
                 ("JPEG Files", "*.jpg"),
+                ("PNG Files", "*.png"),
                 ("All Files", "*.*")
             ]
         )
 
         if file_path:
-            self.current_image.save(file_path)
-            messagebox.showinfo("Saved", "Image saved successfully!")
+            # Start from original image
+            image_to_save = self.original_image.copy()
 
+            # Reapply ALL filters in order
+            for filter_name in self.filter_history:
+                selected_filter = self.filters[filter_name]
+                image_to_save = selected_filter.apply(image_to_save)
+
+            # Save new image
+            if file_path.lower().endswith(".jpg"):
+                image_to_save.save(file_path, quality=90, optimize=True)
+            else:
+                image_to_save.save(file_path, optimize=True)
+
+            messagebox.showinfo("Saved", "New image saved successfully!")
 
 
 # main creates the tkinter window and starts the app.
