@@ -1,4 +1,4 @@
-\# Image Filter App
+\# Image Filter App (Semester Project)
 
 
 
@@ -66,9 +66,9 @@ This project is a Python-based image filtering application that allows users to 
 
 ```bash
 
-git clone https://github.com/YourUsername/ImageFilterApp.git
+git clone https://github.com/ShaneMilner/SemesterProject.git
 
-cd ImageFilterApp
+cd SemesterProject
 
 ```
 
@@ -80,7 +80,7 @@ cd ImageFilterApp
 
 ```bash
 
-conda create -n imagefilter python=3.11
+conda create -n imagefilter python=3.14
 
 conda activate imagefilter
 
@@ -110,7 +110,7 @@ Run the main program:
 
 ```bash
 
-python src/image\_filter\_app.py
+python src/Milner_CS3080_SemesterProject.py
 
 ```
 
