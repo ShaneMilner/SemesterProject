@@ -156,6 +156,8 @@ SemesterProject/
 
 ├── README.md
 
+├── presentation.pptx
+
 ├── requirements.txt
 
 ├── .gitignore
