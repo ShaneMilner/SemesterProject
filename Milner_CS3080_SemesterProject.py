@@ -295,12 +295,30 @@ class ImageFilterApp:
 
     # Restores the image back to the original version.
     def reset_image(self):
+        # Check if an image has been loaded
         if self.original_image is None:
             messagebox.showwarning("No Image", "Please open an image first.")
             return
 
-        self.current_image = self.original_image.copy()
-        self.filter_history = []  # clear history
+        # Define the maximum size for the working image
+        # This keeps processing fast while still looking good in the UI
+        max_work_size = 900
+
+        # Create a copy of the original image so it remains unchanged
+        work_image = self.original_image.copy()
+
+        # Resize the working image if it is too large
+        # thumbnail() preserves aspect ratio while reducing resolution
+        work_image.thumbnail((max_work_size, max_work_size), Image.Resampling.LANCZOS)
+
+        # Set the resized image as the current working image
+        # This ensures filters are applied to a smaller, faster version
+        self.current_image = work_image
+
+        # Clear the filter history since we are returning to the original state
+        self.filter_history = []
+
+        # Display the reset image in the UI
         self.show_image(self.current_image)
 
 
